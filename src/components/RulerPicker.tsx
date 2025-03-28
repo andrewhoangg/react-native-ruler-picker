@@ -118,6 +118,15 @@ export type RulerPickerProps = {
    * @param value
    */
   onValueChangeEnd?: (value: string) => void;
+  /**
+   * Function to format tick values
+   */
+  formatTickValue?: (value: number) => string;
+  /**
+   * Number of steps between long ticks
+   * @default 10 
+   */
+  tickStep?: number;
 } & Partial<RulerPickerItemProps>;
 
 export const RulerPicker = ({
@@ -142,6 +151,8 @@ export const RulerPicker = ({
   decelerationRate = 'normal',
   onValueChange,
   onValueChangeEnd,
+  formatTickValue,
+  tickStep = 10,
 }: RulerPickerProps) => {
   const itemAmount = (max - min) / step;
   const arrData = Array.from({ length: itemAmount + 1 }, (_, index) => index);
@@ -210,12 +221,16 @@ export const RulerPicker = ({
         <RulerPickerItem
           isLast={index === arrData.length - 1}
           index={index}
+          min={min}
+          step={step}
           shortStepHeight={shortStepHeight}
           longStepHeight={longStepHeight}
           gapBetweenSteps={gapBetweenSteps}
           stepWidth={stepWidth}
           shortStepColor={shortStepColor}
           longStepColor={longStepColor}
+          formatTickValue={formatTickValue}
+          tickStep={tickStep}
         />
       );
     },
@@ -227,6 +242,10 @@ export const RulerPicker = ({
       longStepHeight,
       shortStepColor,
       shortStepHeight,
+      formatTickValue,
+      tickStep,
+      min,
+      step,
     ]
   );
 

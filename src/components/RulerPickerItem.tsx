@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 
 export type RulerPickerItemProps = {
   /**
@@ -39,6 +39,18 @@ export type RulerPickerItemProps = {
    * @default 'gray'
    */
   longStepColor: string;
+  /**
+   * Function to format tick values
+   * @default (value) => value.toString()
+   */
+  formatTickValue?: (value: number) => string;
+  /**
+   * Number of steps between long ticks
+   * @default 10
+   */
+  tickStep?: number;
+  min: number;
+  step: number;
 };
 
 type Props = {
@@ -56,9 +68,14 @@ export const RulerPickerItem = React.memo(
     stepWidth,
     shortStepColor,
     longStepColor,
+    min,
+    step,
+    formatTickValue = (value) => value.toString(),
+    tickStep = 10,
   }: Props) => {
-    const isLong = index % 10 === 0;
+    const isLong = index % tickStep === 0;
     const height = isLong ? longStepHeight : shortStepHeight;
+    const value = min + index * step;
 
     return (
       <View
@@ -82,6 +99,25 @@ export const RulerPickerItem = React.memo(
             },
           ]}
         />
+
+        {isLong && (
+         <Text
+            style={{
+              position: 'absolute',
+              bottom: 33,
+              width: 40,
+              textAlign: 'center',
+              color: 'black',
+              fontWeight: '400',
+              fontSize: 17,
+              transform: [{ translateX: -20 + stepWidth / 2 }],
+            }}
+            numberOfLines={1}
+          >
+            {formatTickValue(value)}
+          </Text>
+        )}
+        
       </View>
     );
   }
